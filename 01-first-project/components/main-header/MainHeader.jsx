@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import logoImg from "@/assets/logo.png";
+import logoImg from "@/public/assets/logo.png";
 import styles from "./MainHeader.module.css";
 import MainHeaderBackground from "./MainHeaderBackground";
 import { usePathname } from "next/navigation";
