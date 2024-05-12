@@ -1,8 +1,13 @@
 import { DUMMY_NEWS } from "@/dummy-news";
+import { notFound } from "next/navigation";
 
-function NewsIdPage({ params }) {
+function NewsDetailPage({ params }) {
   const newsSlug = params.newsId;
   const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsSlug);
+
+  if (!newsItem) {
+    notFound();
+  }
 
   return (
     <article className='news-article'>
@@ -16,4 +21,4 @@ function NewsIdPage({ params }) {
   );
 }
 
-export default NewsIdPage;
+export default NewsDetailPage;
