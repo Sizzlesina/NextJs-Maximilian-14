@@ -6,23 +6,14 @@ import {
   getNewsForYearAndMonth,
 } from "@/lib/news";
 import Link from "next/link";
+import { Suspense } from "react";
 
-async function FilteredNewsPage({ params }) {
-  const filter = params.filter;
-  const selectedYear = filter?.[0];
-  const selectedMonth = filter?.[1];
-
+async function FilteredNews({ year, month }) {
   let news;
-  let links = await getAvailableNewsYears();
-
-  if (!selectedMonth && selectedYear) {
-    news = await getNewsForYear(selectedYear);
-    links = getAvailableNewsMonths(selectedYear);
-  }
-
-  if (selectedYear && selectedMonth) {
-    news = await getNewsForYearAndMonth(selectedYear, selectedMonth);
-    links = [];
+  if (year && !month) {
+    news = await getNewsForYear(year);
+  } else if (year && month) {
+    news = await getNewsForYearAndMonth(year, month);
   }
 
   let newsContent = <p>No news found for the selected period.</p>;
@@ -30,7 +21,25 @@ async function FilteredNewsPage({ params }) {
   if (news && news.length > 0) {
     newsContent = <NewsList news={news} />;
   }
+
+  return newsContent;
+}
+
+async function FilteredNewsPage({ params }) {
+  const filter = params.filter;
+  const selectedYear = filter?.[0];
+  const selectedMonth = filter?.[1];
+
   const availableYears = await getAvailableNewsYears();
+  let links = availableYears;
+
+  if (!selectedMonth && selectedYear) {
+    links = getAvailableNewsMonths(selectedYear);
+  }
+
+  if (selectedYear && selectedMonth) {
+    links = [];
+  }
 
   if (
     (selectedYear && !availableYears.includes(selectedYear)) ||
@@ -57,7 +66,9 @@ async function FilteredNewsPage({ params }) {
           </ul>
         </nav>
       </header>
-      {newsContent}
+      <Suspense fallback={<p>Loading news...</p>}>
+        <FilteredNews year={selectedYear} month={selectedMonth} />
+      </Suspense>
     </>
   );
 }
