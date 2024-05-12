@@ -10,11 +10,11 @@ function ImagePicker({ label, name }) {
   function handlePickClick() {
     imageInputRef.current.click();
   }
-  function handleImageChange(event) {
+  async function handleImageChange(event) {
     const file = event.target.files[0];
 
     if (!file) {
-      setPickedImage(null)
+      setPickedImage(null);
       return;
     }
 
