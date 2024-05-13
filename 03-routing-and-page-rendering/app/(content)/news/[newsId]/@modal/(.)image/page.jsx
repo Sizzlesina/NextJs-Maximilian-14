@@ -13,6 +13,7 @@ async function InterceptedimagePage({ params }) {
 
   return (
     <>
+      {/* Client side backdrop to navigate to the previous route  */}
       <ModalBackdrop />
       <dialog className='modal' open>
         <div className='fullscreen-image'>

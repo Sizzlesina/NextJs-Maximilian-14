@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 import { Suspense } from "react";
 
+// Seperated function to make a custom loading for when the headers still rendering
 async function FilterHeader({ year, month }) {
   const availableYears = await getAvailableNewsYears();
   let links = availableYears;
@@ -18,7 +19,6 @@ async function FilterHeader({ year, month }) {
   ) {
     throw new Error("Invalid filter.");
   }
-
   if (!month && year) {
     links = getAvailableNewsMonths(year);
   } else if (year && month) {
@@ -30,9 +30,7 @@ async function FilterHeader({ year, month }) {
       <nav>
         <ul>
           {links.map((link) => {
-            const href = year
-              ? `/archive/${year}/${link}`
-              : `/archive/${link}`;
+            const href = year ? `/archive/${year}/${link}` : `/archive/${link}`;
             return (
               <li key={link}>
                 <Link href={href}>{link}</Link>
@@ -44,7 +42,7 @@ async function FilterHeader({ year, month }) {
     </header>
   );
 }
-
+// Seperated function to make a custom loading for when the content's still rendering
 async function FilteredNews({ year, month }) {
   let news;
   if (year && !month) {
@@ -61,7 +59,7 @@ async function FilteredNews({ year, month }) {
 
   return newsContent;
 }
-
+// Main component function
 async function FilteredNewsPage({ params }) {
   const filter = params.filter;
   const selectedYear = filter?.[0];
@@ -70,7 +68,7 @@ async function FilteredNewsPage({ params }) {
   return (
     <>
       <Suspense fallback={<p>Loading filter...</p>}>
-        <FilterHeader />
+        <FilterHeader year={selectedYear} month={selectedMonth} />
       </Suspense>
       <Suspense fallback={<p>Loading news...</p>}>
         <FilteredNews year={selectedYear} month={selectedMonth} />
