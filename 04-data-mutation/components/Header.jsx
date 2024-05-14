@@ -12,6 +12,7 @@ export default function Header() {
           // sizes='10vw'
           width={100}
           height={100}
+          priority
         />
       </Link>
       <nav>
